@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { Text, View, TouchableOpacity, TextInput, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+  StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 
 export default function HomeScreen() {
   const [task, setTask] = useState("");
@@ -35,21 +44,39 @@ export default function HomeScreen() {
       <ScrollView contentContainerStyle={styles.taskList}>
         {tasks.map((taskItem, index) => (
           <View key={index} style={styles.taskItem}>
-            <TouchableOpacity onPress={() => toggleCheckbox(index)} style={styles.checkboxContainer}>
+            <TouchableOpacity
+              onPress={() => toggleCheckbox(index)}
+              style={styles.checkboxContainer}
+            >
               <View
                 style={[
                   styles.checkbox,
                   taskItem.isChecked && { backgroundColor: "green" },
                 ]}
               />
-              {taskItem.isChecked && <Text style={styles.checkedText}>✔</Text>}
+              {taskItem.isChecked && (
+                <Text style={styles.checkedText}>✔</Text>
+              )}
             </TouchableOpacity>
-            <Text style={[styles.taskText, taskItem.isChecked && { textDecorationLine: "line-through" }]}>
+
+            <Text
+              style={[
+                styles.taskText,
+                taskItem.isChecked && { textDecorationLine: "line-through" },
+              ]}
+            >
               {taskItem.text}
             </Text>
-            <TouchableOpacity onPress={() => deleteTask(index)} style={styles.deleteButton}>
-              <Text style={styles.deleteButtonText}>Delete</Text>
-            </TouchableOpacity>
+
+            {/* Show Delete button only if task is checked */}
+            {taskItem.isChecked && (
+              <TouchableOpacity
+                onPress={() => deleteTask(index)}
+                style={styles.deleteButton}
+              >
+                <Text style={styles.deleteButtonText}>Delete</Text>
+              </TouchableOpacity>
+            )}
           </View>
         ))}
       </ScrollView>
