@@ -14,6 +14,7 @@ export default function HomeScreen() {
   const [task, setTask] = useState("");
   const [description, setDescription] = useState("");
   const [tasks, setTasks] = useState([]);
+  const [editingIndex, setEditingIndex] = useState(null); // Index of the task being edited
 
   const addTask = () => {
     if (task.trim() !== "") {
@@ -35,6 +36,23 @@ export default function HomeScreen() {
   const deleteTask = (index) => {
     const updatedTasks = tasks.filter((_, taskIndex) => taskIndex !== index);
     setTasks(updatedTasks);
+  };
+
+  const saveTask = () => {
+    if (editingIndex !== null) {
+      const updatedTasks = [...tasks];
+      updatedTasks[editingIndex] = { text: task, description: description, isChecked: false };
+      setTasks(updatedTasks);
+      setEditingIndex(null); // Exit edit mode
+      setTask("");
+      setDescription("");
+    }
+  };
+
+  const cancelEdit = () => {
+    setEditingIndex(null); // Exit edit mode
+    setTask("");
+    setDescription("");
   };
 
   return (
@@ -88,29 +106,68 @@ export default function HomeScreen() {
                 <Text style={styles.deleteButtonText}>Delete</Text>
               </TouchableOpacity>
             )}
+
+            {/* Edit Button - visible only when editing a task */}
+            <TouchableOpacity
+              onPress={() => {
+                setEditingIndex(index);
+                setTask(taskItem.text);
+                setDescription(taskItem.description);
+              }}
+              style={styles.editButton}
+            >
+              <Text style={styles.editButtonText}>Edit</Text>
+            </TouchableOpacity>
           </View>
         ))}
       </ScrollView>
 
       {/* Inputs and Add Button */}
       <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          value={task}
-          onChangeText={setTask}
-          placeholder="Task title"
-          placeholderTextColor="#ccc"
-        />
-        <TextInput
-          style={styles.input}
-          value={description}
-          onChangeText={setDescription}
-          placeholder="Task description (optional)"
-          placeholderTextColor="#ccc"
-        />
-        <TouchableOpacity onPress={addTask} style={styles.addButton}>
-          <Text style={styles.addButtonText}>Add Task</Text>
-        </TouchableOpacity>
+        {editingIndex === null ? (
+          <>
+            <TextInput
+              style={styles.input}
+              value={task}
+              onChangeText={setTask}
+              placeholder="Task title"
+              placeholderTextColor="#ccc"
+            />
+            <TextInput
+              style={styles.input}
+              value={description}
+              onChangeText={setDescription}
+              placeholder="Task description (optional)"
+              placeholderTextColor="#ccc"
+            />
+            <TouchableOpacity onPress={addTask} style={styles.addButton}>
+              <Text style={styles.addButtonText}>Add Task</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <>
+            <TextInput
+              style={styles.input}
+              value={task}
+              onChangeText={setTask}
+              placeholder="Edit task title"
+              placeholderTextColor="#ccc"
+            />
+            <TextInput
+              style={styles.input}
+              value={description}
+              onChangeText={setDescription}
+              placeholder="Edit task description (optional)"
+              placeholderTextColor="#ccc"
+            />
+            <TouchableOpacity onPress={saveTask} style={styles.saveButton}>
+              <Text style={styles.addButtonText}>Save Changes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={cancelEdit} style={styles.cancelButton}>
+              <Text style={styles.addButtonText}>Cancel</Text>
+            </TouchableOpacity>
+          </>
+        )}
       </View>
     </KeyboardAvoidingView>
   );
@@ -179,6 +236,18 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 14,
   },
+  editButton: {
+    backgroundColor: "#ffbb33",
+    padding: 6,
+    borderRadius: 4,
+    alignItems: "center",
+    marginLeft: 10,
+    marginTop: 6,
+  },
+  editButtonText: {
+    color: "#fff",
+    fontSize: 14,
+  },
   inputContainer: {
     marginTop: 12,
     marginBottom: 16,
@@ -194,6 +263,21 @@ const styles = StyleSheet.create({
   },
   addButton: {
     backgroundColor: "#007bff",
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+    alignItems: "center",
+  },
+  saveButton: {
+    backgroundColor: "#4CAF50", // Green save button
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  cancelButton: {
+    backgroundColor: "#f44336", // Red cancel button
     paddingVertical: 10,
     paddingHorizontal: 12,
     borderRadius: 4,
