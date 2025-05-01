@@ -12,12 +12,17 @@ import {
 
 export default function HomeScreen() {
   const [task, setTask] = useState("");
+  const [description, setDescription] = useState("");
   const [tasks, setTasks] = useState([]);
 
   const addTask = () => {
     if (task.trim() !== "") {
-      setTasks([...tasks, { text: task, isChecked: false }]);
+      setTasks([
+        ...tasks,
+        { text: task, description: description.trim(), isChecked: false },
+      ]);
       setTask("");
+      setDescription("");
     }
   };
 
@@ -59,16 +64,22 @@ export default function HomeScreen() {
               )}
             </TouchableOpacity>
 
-            <Text
-              style={[
-                styles.taskText,
-                taskItem.isChecked && { textDecorationLine: "line-through" },
-              ]}
-            >
-              {taskItem.text}
-            </Text>
+            <View style={{ flex: 1 }}>
+              <Text
+                style={[
+                  styles.taskText,
+                  taskItem.isChecked && { textDecorationLine: "line-through" },
+                ]}
+              >
+                {taskItem.text}
+              </Text>
+              {taskItem.description !== "" && (
+                <Text style={styles.descriptionText}>
+                  {taskItem.description}
+                </Text>
+              )}
+            </View>
 
-            {/* Show Delete button only if task is checked */}
             {taskItem.isChecked && (
               <TouchableOpacity
                 onPress={() => deleteTask(index)}
@@ -81,13 +92,20 @@ export default function HomeScreen() {
         ))}
       </ScrollView>
 
-      {/* Input and Add Button at Bottom */}
+      {/* Inputs and Add Button */}
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
           value={task}
           onChangeText={setTask}
-          placeholder="Enter new task"
+          placeholder="Task title"
+          placeholderTextColor="#ccc"
+        />
+        <TextInput
+          style={styles.input}
+          value={description}
+          onChangeText={setDescription}
+          placeholder="Task description (optional)"
           placeholderTextColor="#ccc"
         />
         <TouchableOpacity onPress={addTask} style={styles.addButton}>
@@ -117,7 +135,7 @@ const styles = StyleSheet.create({
   },
   taskItem: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "flex-start",
     marginVertical: 8,
     justifyContent: "space-between",
   },
@@ -125,6 +143,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12,
+    marginTop: 6,
   },
   checkbox: {
     width: 24,
@@ -142,7 +161,11 @@ const styles = StyleSheet.create({
   taskText: {
     fontSize: 16,
     color: "#fff",
-    flex: 1,
+  },
+  descriptionText: {
+    fontSize: 14,
+    color: "#aaa",
+    marginTop: 4,
   },
   deleteButton: {
     backgroundColor: "#ff4d4d",
@@ -150,32 +173,31 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     alignItems: "center",
     marginLeft: 10,
+    marginTop: 6,
   },
   deleteButtonText: {
     color: "#fff",
     fontSize: 14,
   },
   inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
     marginTop: 12,
     marginBottom: 16,
   },
   input: {
-    flex: 1,
     height: 40,
     borderColor: "#ccc",
     borderWidth: 1,
     borderRadius: 4,
     paddingLeft: 8,
     color: "#fff",
-    marginRight: 8,
+    marginBottom: 8,
   },
   addButton: {
     backgroundColor: "#007bff",
     paddingVertical: 10,
     paddingHorizontal: 12,
     borderRadius: 4,
+    alignItems: "center",
   },
   addButtonText: {
     color: "#fff",
