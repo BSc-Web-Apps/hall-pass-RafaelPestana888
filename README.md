@@ -17,13 +17,7 @@ This is the starter project code for 'Hall Pass' - a To Do List app aimed at stu
    npm install -g expo-cli
    ```
 
-3. If you want to develop for Android, you will need to install the Android Studio and the Android SDK:
-
-   - Visit https://developer.android.com/studio to download this onto your machine.
-   - During installation, make sure to check the box for "Android SDK" and the Android SDK Platform-Tools when selecting components.
-   - Upon completion of the installation, open Android Studio to finish configuring the SDK Manager.
-
-4. On your phone, install **Expo Go** from the app store for your device.
+3. On your phone, install **Expo Go** from the app store for your device.
 
 ## Running the project
 
