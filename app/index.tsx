@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import Task from "~/components/Task";
 
 export default function HomeScreen() {
   const [task, setTask] = useState("");
@@ -66,59 +67,16 @@ export default function HomeScreen() {
       {/* Task List */}
       <ScrollView contentContainerStyle={styles.taskList}>
         {tasks.map((taskItem, index) => (
-          <View key={index} style={styles.taskItem}>
-            <TouchableOpacity
-              onPress={() => toggleCheckbox(index)}
-              style={styles.checkboxContainer}
-            >
-              <View
-                style={[
-                  styles.checkbox,
-                  taskItem.isChecked && { backgroundColor: "green" },
-                ]}
-              />
-              {taskItem.isChecked && (
-                <Text style={styles.checkedText}>✔</Text>
-              )}
-            </TouchableOpacity>
-
-            <View style={{ flex: 1 }}>
-              <Text
-                style={[
-                  styles.taskText,
-                  taskItem.isChecked && { textDecorationLine: "line-through" },
-                ]}
-              >
-                {taskItem.text}
-              </Text>
-              {taskItem.description !== "" && (
-                <Text style={styles.descriptionText}>
-                  {taskItem.description}
-                </Text>
-              )}
-            </View>
-
-            {taskItem.isChecked && (
-              <TouchableOpacity
-                onPress={() => deleteTask(index)}
-                style={styles.deleteButton}
-              >
-                <Text style={styles.deleteButtonText}>Delete</Text>
-              </TouchableOpacity>
-            )}
-
-            {/* Edit Button - visible only when editing a task */}
-            <TouchableOpacity
-              onPress={() => {
-                setEditingIndex(index);
-                setTask(taskItem.text);
-                setDescription(taskItem.description);
-              }}
-              style={styles.editButton}
-            >
-              <Text style={styles.editButtonText}>Edit</Text>
-            </TouchableOpacity>
-          </View>
+          <Task
+            key={index}
+            index={index}
+            deleteTask={deleteTask}
+            setDescription={setDescription}
+            setEditingIndex={setEditingIndex}
+            setTask={setTask}
+            taskItem={taskItem}
+            toggleCheckbox={toggleCheckbox}
+          />
         ))}
       </ScrollView>
 
@@ -173,7 +131,7 @@ export default function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#121212",
